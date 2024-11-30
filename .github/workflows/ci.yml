@@ -22,13 +22,10 @@ jobs:
       - name: Install GitGuardian CLI
         run: pip install ggshield
 
-      - name: Authenticate with GitGuardian CLI
+      - name: Run GitGuardian secret scan
         env: 
           GITGUARDIAN_API_KEY: ${{ secrets.CI_GUARDIAN_API }}  
-        run: ggshield scan --api-key $CI_GUARDIAN_API  
-
-      - name: Run GitGuardian secret scan
-        run: ggshield secret scan repo .
+        run: ggshield secret scan repo .  
 
   lint:
     name: Lint code
