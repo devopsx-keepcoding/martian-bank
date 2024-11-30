@@ -24,7 +24,7 @@ jobs:
 
       - name: Run GitGuardian secret scan
         env: 
-          GITGUARDIAN_API_KEY: ${{ secrets.CI_GUARDIAN_API }}  
+          CI_GUARDIAN_API_KEY: ${{ secrets.CI_GUARDIAN_API }}  
         run: ggshield secret scan repo .  
 
   lint:
