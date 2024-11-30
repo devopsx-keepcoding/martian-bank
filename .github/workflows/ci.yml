@@ -28,7 +28,7 @@ jobs:
         run: ggshield scan --api-key $CI_GUARDIAN_API  
 
       - name: Run GitGuardian secret scan
-        run: ggshield scan repo .
+        run: ggshield secret scan repo .
 
   lint:
     name: Lint code
