@@ -30,6 +30,9 @@ jobs:
   lint:
     name: Lint code
     runs-on: ubuntu-latest
+    strategy:
+        matrix:
+            module: [ui, customer-auth, atm-locator]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -39,10 +42,12 @@ jobs:
         with:
           node-version: 16
 
-      - name: Install dependencies
+      - name: Install dependencies for ${{ matrix.module }}
+        working-directory: ./${{ matrix.module }}
         run: npm ci
 
-      - name: Run ESLint
+      - name: Run ESLint for ${{ matrix.module }}
+        working-directory: ./${{ matrix.module }}
         run: npx eslint .
 
   test:
