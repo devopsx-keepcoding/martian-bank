@@ -28,6 +28,7 @@ jobs:
         run: ggshield secret scan repo .  
 
   lint:
+    timeout-minutes: 10
     name: Lint code
     runs-on: ubuntu-latest
     strategy:
