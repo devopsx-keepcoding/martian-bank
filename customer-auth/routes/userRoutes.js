@@ -12,7 +12,7 @@ import {
   getUserProfile,
   updateUserProfile,
 } from '../controllers/userController.js';
-import { protect } from '../middleware/authMiddleware.js';
+/*import { protect } from '../middleware/authMiddleware.js';*/ // Se comenta esta linea a causa del analisis de EsLint. Esta variable no se utiliza en el proyecto.
 
 const router = express.Router();
 

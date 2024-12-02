@@ -20,7 +20,7 @@ const getYamlContent = async () => {
     const yamlContent = await fs.readFile(swaggerSpecsFile, 'utf8');
     return yamlContent;
   } catch (error) {
-    console.error('Error reading file:', error);
+    logger.info('Error reading file:', error);
     throw error;
   }
 };
@@ -50,7 +50,7 @@ export const swaggerDocs = (app, port) => {
     res.send(swaggerSpec);
   });
 
-  console.log(
+  logger.info(
     `Swagger documentation available at :${port}/docs`,
   );
 };
