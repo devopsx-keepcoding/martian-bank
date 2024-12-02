@@ -108,11 +108,7 @@ nginx:
 ## Deploy with local MongoDB or with MongoDB Atlas
 
 mongodb:
-  ## For easier development and testing, we deploy MongoDB Atlas instance (enabled: true).
-  ## If you want to use local MongoDB, then set enabled to 'false'
-  ##
   enabled: false
-  ## cambiar a values fuera
   rootUsername: root
   rootPassword: example
   host: mongodb
