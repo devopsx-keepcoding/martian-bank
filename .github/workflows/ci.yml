@@ -45,7 +45,7 @@ jobs:
 
       - name: Install dependencies for ${{ matrix.module }}
         working-directory: ./${{ matrix.module }}
-        run: npm ci
+        run: npm ci --no-audit --no-fund
 
       - name: Run ESLint for ${{ matrix.module }}
         working-directory: ./${{ matrix.module }}
