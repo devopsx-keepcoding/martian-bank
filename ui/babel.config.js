@@ -4,8 +4,10 @@
  * license that can be found in the LICENSE file.
  */
 
-module.exports = function (api) {
+/**module.exports = function (api) {
   return {
     plugins: ["macros"],
   };
 };
+Se comenta todo el modulo a causa del analisis de EsLint. Esta variable no se utiliza en el proyecto.
+*/

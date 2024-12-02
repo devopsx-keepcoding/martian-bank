@@ -5,7 +5,7 @@
  */
 
 import { createSlice } from '@reduxjs/toolkit';
-import Cookies from 'js-cookie';
+/**import Cookies from 'js-cookie';*/ // Se comenta esta linea a causa del analisis de EsLint
 
 const initialState = {
   userInfo: localStorage.getItem('userInfo')
