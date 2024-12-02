@@ -34,9 +34,9 @@ const accountSlice = createSlice({
     currentAccount: (state, action) => {
       state.current_account = action.payload;
     },
-    deleteCurrentAccount: (state, action) => {
+    /**deleteCurrentAccount: (state, action) => {
       state.current_account = [];
-    },
+    },*/ // Se comenta esta funcion a causa del analisis de EsLint
   },
 });
 
