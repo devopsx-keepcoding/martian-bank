@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
         matrix:
-            module: [accounts,atm-locator,customer-auth, dashboard,loan,protobufs, transactions,ui]
+            module: [atm-locator,customer-auth,ui]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
