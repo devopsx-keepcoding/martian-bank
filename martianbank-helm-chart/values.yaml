@@ -112,6 +112,10 @@ mongodb:
   ## If you want to use local MongoDB, then set enabled to 'false'
   ##
   enabled: false
+  ## cambiar a values fuera
+  rootUsername: root
+  rootPassword: example
+  host: mongodb
 
 SERVICE_PROTOCOL: "http"
 DB_URL:  
