@@ -1,0 +1,86 @@
+# customer-auth
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: customer-auth
+    labels:
+        app: customer-auth
+spec:    
+    replicas: 1
+    selector:
+        matchLabels:
+            app: customer-auth
+    template:
+        metadata:
+            labels:
+                app: customer-auth
+        spec:
+            containers:
+                - name: customer-auth
+                  image: devopsxkeepcoding/customer-auth:latest
+                  imagePullPolicy: IfNotPresent 
+                  env:
+                    {{- if not .Values.mongodb.enabled }}
+                      - name: DATABASE_HOST
+                        value: "root:example@mongodb"
+                    {{- end }}
+                      - name: NODE_ENV
+                        value: production
+                      - name: PORT 
+                        value: "8000"
+                  envFrom:
+                      - configMapRef:
+                          name: configmap-martianbank
+                  livenessProbe:
+                    tcpSocket:
+                      port: 8000
+                    initialDelaySeconds: 10
+                    periodSeconds: 20
+                  readinessProbe:
+                    tcpSocket:
+                      port: 8000
+                    initialDelaySeconds: 10
+                    periodSeconds: 20
+                  resources:
+                    requests:
+                      memory: {{ .Values.resources.requests.memory }}
+                      cpu: {{ .Values.resources.requests.cpu }}
+                    limits:
+                      memory: {{ .Values.resources.limits.memory }}
+                      cpu: {{ .Values.resources.limits.cpu }}
+            nodeSelector:   
+              {{- if .Values.nodeSelector.enabled }}
+                role: {{ .Values.nodeSelector.role }}
+              {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: customer-auth
+spec:
+    selector:
+        app: customer-auth
+    ports:
+        - protocol: TCP
+          port: 8000
+          targetPort: 8000
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: cutomer-auth-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: customer-auth
+  minReplicas: 1 # Minimum number of pods to maintain
+  maxReplicas: 5 # Maximum number of pods to scale up to
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50 # Scale up if CPU usage reaches 50% on average

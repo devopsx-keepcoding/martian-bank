@@ -1,0 +1,73 @@
+{{- if .Values.nginx.enabled }}
+# nginx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: nginx
+    labels:
+        app: nginx
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: nginx
+    template:
+        metadata:
+            labels:
+                app: nginx
+        spec:
+            containers:
+                - name: nginx
+                  image: devopsxkeepcoding/nginx:latest
+                  imagePullPolicy: IfNotPresent 
+                  livenessProbe:
+                    tcpSocket:
+                      port: 8080
+                    initialDelaySeconds: 10
+                    periodSeconds: 20
+                  readinessProbe:
+                    tcpSocket:
+                      port: 8080
+                    initialDelaySeconds: 10
+                    periodSeconds: 20
+                  resources:
+                    requests:
+                      memory: {{ .Values.resources.requests.memory }}
+                      cpu: {{ .Values.resources.requests.cpu }}
+                    limits:
+                      memory: {{ .Values.resources.limits.memory }}
+                      cpu: {{ .Values.resources.limits.cpu }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: nginx
+spec:
+    type: LoadBalancer
+    selector:
+        app: nginx
+    ports:
+        - protocol: TCP
+          port: 8080
+          targetPort: 8080
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nginx-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: nginx
+  minReplicas: 1 # Minimum number of pods to maintain
+  maxReplicas: 5 # Maximum number of pods to scale up to
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50 # Scale up if CPU usage reaches 50% on average
+{{- end }}
