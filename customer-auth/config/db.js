@@ -16,14 +16,12 @@ const connectDB = async () => {
       logger.info(
         `Connecting to local MongoDB at ${process.env.DATABASE_HOST} ...`,
       );
-      const conn = await mongoose.connect(
-        `mongodb://${process.env.DATABASE_HOST}:27017/`,
-      );
+      await mongoose.connect(`mongodb://${process.env.DATABASE_HOST}:27017/`);
     } else {
       logger.info(
         `Connecting to MongoDB Atlas for customer-auth at ${process.env.DB_URL}`,
       );
-      const conn = await mongoose.connect(process.env.DB_URL);
+      await mongoose.connect(process.env.DB_URL);
     }
     logger.info(' --- MongoDB Connected --- '.cyan);
   } catch (error) {
