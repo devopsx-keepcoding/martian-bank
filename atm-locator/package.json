@@ -6,7 +6,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "atm": "nodemon server.js"
+    "atm": "nodemon server.js",
+    "test": "jest --coverage"
   },
   "keywords": [],
   "author": "",
