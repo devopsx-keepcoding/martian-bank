@@ -1,3 +1,9 @@
+global.logger = {
+  info: jest.fn(),
+  error: jest.fn(),
+  // Otros métodos si es necesario
+};
+
 import mongoose from 'mongoose';
 import connectDB from '../config/db.js';
 

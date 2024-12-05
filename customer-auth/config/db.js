@@ -5,6 +5,7 @@
  */
 
 import mongoose from 'mongoose';
+import 'colors'; /**Importacion debido a errores con las pruebas Unitarias */
 
 const connectDB = async () => {
   try {
