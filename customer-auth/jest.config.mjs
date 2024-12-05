@@ -11,6 +11,11 @@ export default {
       '**/?(*.)+(spec|test).mjs',       // Archivos .spec.mjs, .test.mjs
     ],
     moduleFileExtensions: ['js', 'mjs', 'cjs', 'jsx', 'ts', 'tsx', 'json', 'node'],
+
+    // Opciones de cobertura
+    collectCoverage: true,
+    coverageDirectory: 'coverage',
+    coverageReporters: ['lcov', 'text'],
   };
   
   

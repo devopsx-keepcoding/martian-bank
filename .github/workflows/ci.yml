@@ -83,6 +83,20 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Download coverage report for customer-auth
+        uses: actions/download-artifact@v3
+        with:
+          name: customer-auth-coverage-report
+          path: ./customer-auth/coverage
+  
+      - name: Download coverage report for ui
+        uses: actions/download-artifact@v3
+        with:
+            name: ui-coverage-report
+            path: ./ui/coverage
 
       - name: Set up Java
         uses: actions/setup-java@v3
@@ -104,3 +118,6 @@ jobs:
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
           -Dsonar.organization=devopsx-keepcoding \
           -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+          -Dsonar.javascript.lcov.reportPaths=customer-auth/coverage/lcov.info,ui/coverage/lcov.info \
+          -Dsonar.exclusions=**/node_modules/**,**/__tests__/** \
+          -Dsonar.coverage.exclusions=**/tests/**,**/__tests__/**,**/*.test.*,**/*.spec.*  
