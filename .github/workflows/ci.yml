@@ -147,11 +147,11 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           sonar-scanner \
-          -Dsonar.projectKey=devopsx-keepcoding_martian-bank \
-          -Dsonar.sources=. \
-          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-          -Dsonar.organization=devopsx-keepcoding \
-          -Dsonar.token=${{ secrets.SONAR_TOKEN }}
-          -Dsonar.javascript.lcov.reportPaths=customer-auth/coverage/lcov.info,ui/coverage/lcov.info \
-          -Dsonar.exclusions=**/node_modules/**,**/__tests__/** \
-          -Dsonar.coverage.exclusions=**/tests/**,**/__tests__/**,**/*.test.*,**/*.spec.*  
+            -Dsonar.projectKey=devopsx-keepcoding_martian-bank \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+            -Dsonar.organization=devopsx-keepcoding \
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.javascript.lcov.reportPaths=customer-auth/coverage/lcov.info,ui/coverage/lcov.info \
+            -Dsonar.exclusions=**/node_modules/**,**/__tests__/** \
+            -Dsonar.coverage.exclusions=**/tests/**,**/__tests__/**,**/*.test.*,**/*.spec.*  
