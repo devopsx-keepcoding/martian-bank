@@ -11,3 +11,11 @@
 };
 Se comenta todo el modulo a causa del analisis de EsLint. Esta variable no se utiliza en el proyecto.
 */
+export default {
+  presets: [
+    ['@babel/preset-env', { targets: { node: 'current' } }],
+    '@babel/preset-react',
+  ],
+};
+
+

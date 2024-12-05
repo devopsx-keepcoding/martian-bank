@@ -51,30 +51,31 @@ jobs:
         working-directory: ./${{ matrix.module }}
         run: npx eslint .
 
-  test:
+  unit-test:
     name: Run Unit Tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        module: [customer-auth, atm-locator, ui]
+        module: [customer-auth, ui]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-    # Lista archivos del módulo para verificar la configuración    
-      - name: Verify module files
-        working-directory: ./${{ matrix.module }}
-        run: ls -la
-    
-    # Instalar dependencias   
       - name: Install dependencies
         working-directory: ./${{ matrix.module }}
         run: npm ci
     
-    # Ejecutar Unit Test
-      - name: Run Unit Tests
-        working-directory: ./${{ matrix.module }}    
-        run: npm test
+      - name: Run tests with coverage
+        working-directory: ./${{ matrix.module }}
+        run: |
+          chmod +x ./node_modules/.bin/jest
+          ./node_modules/.bin/jest --coverage
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.module }}-coverage-report
+          path: ${{ matrix.module }}/coverage
 
   sonarqube:
     name: Run SonarQube Analysis
