@@ -96,10 +96,11 @@ jobs:
       - name: Run SonarQube Analysis
         env:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          SONAR_LOGIN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           sonar-scanner \
           -Dsonar.projectKey=devopsx-keepcoding_martian-bank \
           -Dsonar.sources=. \
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+          -Dsonar.organization=devopsx-keepcoding \
+          -Dsonar.token=${{ secrets.SONAR_TOKEN }}
