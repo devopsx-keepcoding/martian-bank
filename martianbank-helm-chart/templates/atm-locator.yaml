@@ -1,0 +1,88 @@
+# atm-locator
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: atm-locator
+    labels:
+        app: atm-locator
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: atm-locator
+    template:
+        metadata:
+            labels:
+                app: atm-locator
+        spec:
+            containers:
+                - name: atm-locator
+                  image: devopsxkeepcoding/atm-locator:latest
+                  imagePullPolicy: IfNotPresent                
+                  env:
+                    {{- if not .Values.mongodb.enabled }}
+                      - name: DATABASE_HOST
+                        value: "root:example@mongodb"
+                    {{- end }}
+                      - name: NODE_ENV
+                        value: production
+                      - name: PORT 
+                        value: "8001"
+                  envFrom:
+                      - configMapRef:
+                          name: configmap-martianbank
+                  livenessProbe:
+                    tcpSocket:
+                      port: 8001
+                    initialDelaySeconds: 10
+                    periodSeconds: 20
+                  readinessProbe:
+                    tcpSocket:
+                      port: 8001
+                    initialDelaySeconds: 10
+                    periodSeconds: 20
+                  resources:
+                    requests:
+                      memory: {{ .Values.resources.requests.memory }}
+                      cpu: {{ .Values.resources.requests.cpu }}
+                    limits:
+                      memory: {{ .Values.resources.limits.memory }}
+                      cpu: {{ .Values.resources.limits.cpu }}
+            nodeSelector:   
+              {{- if .Values.nodeSelector.enabled }}
+                role: {{ .Values.nodeSelector.role }}
+              {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: atm-locator
+spec:
+    selector:
+        app: atm-locator
+    ports:
+        - protocol: TCP
+          port: 8001
+          targetPort: 8001
+---
+{{- if .Values.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: atm-locator-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: atm-locator
+  minReplicas: {{ .Values.autoscaling.minReplicas }} # Minimum number of pods to maintain
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }} # Maximum number of pods to scale up to
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50 # Scale up if CPU usage reaches 50% on average
+{{- end }}

@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: ui
+    labels:
+        app: ui
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: ui
+    template:
+        metadata:
+            labels:
+                app: ui
+        spec:
+            containers:
+                - name: ui
+                  image: devopsxkeepcoding/ui:latest
+                  imagePullPolicy: IfNotPresent
+                  env: 
+                    {{- if .Values.nginx.enabled }}
+                      - name: VITE_USERS_URL
+                        value: /api/users
+                      - name: VITE_ATM_URL
+                        value: /api/atm
+                      - name: VITE_ACCOUNTS_URL
+                        value: /api/account
+                      - name: VITE_TRANSFER_URL
+                        value: /api/transaction
+                      - name: VITE_LOAN_URL
+                        value: /api/loan
+                    {{- else }}
+                      - name: VITE_USERS_URL
+                        value: http://{{ .Values.nginx.dashboardIP }}:5000/api/users
+                      - name: VITE_ATM_URL
+                        value: http://{{ .Values.nginx.dashboardIP }}:5000/api/atm/
+                      - name: VITE_ACCOUNTS_URL
+                        value: http://{{ .Values.nginx.dashboardIP }}:5000/account/
+                      - name: VITE_TRANSFER_URL
+                        value: http://{{ .Values.nginx.dashboardIP }}:5000/transaction/
+                      - name: VITE_LOAN_URL
+                        value: http://{{ .Values.nginx.dashboardIP }}:5000/loan/
+                    {{- end }}
+                  livenessProbe:
+                    tcpSocket:
+                      port: 3000
+                    initialDelaySeconds: 10
+                    periodSeconds: 20
+                  readinessProbe:
+                    tcpSocket:
+                      port: 3000
+                    initialDelaySeconds: 10
+                    periodSeconds: 20
+                  resources:
+                    requests:
+                      memory: 250Mi
+                      cpu: {{ .Values.resources.requests.cpu }}
+                    limits:
+                      memory: 500Mi
+                      cpu: {{ .Values.resources.limits.cpu }}
+            nodeSelector:   
+              {{- if .Values.nodeSelector.enabled }}
+                role: {{ .Values.nodeSelector.role }}
+              {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: ui
+spec:
+    {{- if not .Values.nginx.enabled }}
+    type: LoadBalancer
+    {{- end }}
+    selector:
+        app: ui
+    ports:
+        - protocol: TCP
+          port: 3000
+          targetPort: 3000
+---
+{{- if .Values.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ui-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ui
+  minReplicas: {{ .Values.autoscaling.minReplicas }} # Minimum number of pods to maintain
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }} # Maximum number of pods to scale up to
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50 # Scale up if CPU usage reaches 50% on average
+{{- end }}

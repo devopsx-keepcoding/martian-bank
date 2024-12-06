@@ -1,0 +1,113 @@
+# Default values for martianbank.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  {}
+  # fsGroup: 2000
+
+securityContext:
+  {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 85
+
+
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+    cpu: 500m
+    memory: 128Mi
+  requests:
+    cpu: 250m
+    memory: 64Mi
+
+#######################################################################################
+## Deploy with/without autoscaling
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+
+###################################################################################
+## Deploy with/without nodeSelector rules
+nodeSelector:
+  # If enabled is true it deploys pods only in nodes with the key:vale Ex. role:worker
+  # enabled=true for a minikube 3 nodes setup (2 worker nodes + control plane)
+  enabled: false
+  role: worker
+
+tolerations: []
+
+affinity: {}
+
+#######################################################################################
+## Deploy with/without NGINX
+
+nginx:
+  ## If enabled is false then deploy the application and access the application through the ui service
+  enabled: true
+
+
+
+#######################################################################################
+## Deploy with terraform in a AWS EKS cluster 
+
+aws:
+  # If enabled is true it will add annotations in nginx service to deploy a Network Load Balancer
+  # in AWS to access the application from outside the cluster.
+  enabled: true
+
+
+
+#######################################################################################
+## Deploy with local MongoDB or with MongoDB Atlas
+
+mongodb:
+  ## For easier development and testing, we deploy MongoDB Atlas instance (enabled: true).
+  ## If you want to use local MongoDB, then set enabled to 'false'
+  ##
+  enabled: false
+
+SERVICE_PROTOCOL: "http"
+DB_URL:  
+
+#######################################################################################
+## Deploy locust
+
+locust: 
+  enabled: false
