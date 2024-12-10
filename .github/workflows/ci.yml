@@ -163,8 +163,7 @@ jobs:
     needs: [lint, unit-test-customer-auth, unit-test-ui] # Se ejecuta después de lint y tests
     strategy:
       matrix:
-        module: [accounts]
-        #module: [accounts, atm-locator, customer-auth, dashboard, loan, nginx, transactions, ui]
+        module: [accounts, atm-locator, customer-auth, dashboard, loan, nginx, transactions, ui]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
