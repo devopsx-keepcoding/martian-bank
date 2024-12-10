@@ -163,7 +163,8 @@ jobs:
     needs: [lint, unit-test-customer-auth, unit-test-ui] # Se ejecuta después de lint y tests
     strategy:
       matrix:
-        module: [accounts, atm-locator, customer-auth, dashboard, loan, nginx, transactions, ui]
+        module: [accounts]
+        #module: [accounts, atm-locator, customer-auth, dashboard, loan, nginx, transactions, ui]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -178,8 +179,8 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and Push Docker Image
-        working-directory: ./${{ matrix.module }}
+        
         run: |
-          docker build -t devopsxkeepcoding/martian-bank:${{ matrix.module }}-latest .
+          docker build -f ${{ matrix.module }}/Dockerfile -t devopsxkeepcoding/martian-bank:${{ matrix.module }}-latest .
           docker push devopsxkeepcoding/martian-bank:${{ matrix.module }}-latest
           
