@@ -164,7 +164,7 @@ jobs:
     strategy:
       matrix:
         #module: [accounts, atm-locator, customer-auth, dashboard, loan, nginx, transactions, ui]
-        module: [nginx]
+        module: [transactions]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
