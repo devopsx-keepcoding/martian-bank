@@ -179,8 +179,14 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and Push Docker Image
-        
         run: |
-          docker build -f ${{ matrix.module }}/Dockerfile -t devopsxkeepcoding/martian-bank:${{ matrix.module }}-latest .
-          docker push devopsxkeepcoding/martian-bank:${{ matrix.module }}-latest
+          if [ "${{ matrix.module }}" = "ui" ]; then
+            # Para 'ui', cambiamos el contexto al directorio 'ui'
+            docker build -f ui/Dockerfile -t devopsxkeepcoding/martian-bank:ui-latest ui/
+            docker push devopsxkeepcoding/martian-bank:ui-latest
+          else
+            # Para el resto de módulos, mantenemos el contexto en la raíz
+            docker build -f ${{ matrix.module }}/Dockerfile -t devopsxkeepcoding/martian-bank:${{ matrix.module }}-latest .
+            docker push devopsxkeepcoding/martian-bank:${{ matrix.module }}-latest
+          fi
           
