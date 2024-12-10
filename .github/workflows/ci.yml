@@ -177,6 +177,6 @@ jobs:
       - name: Build and Push Docker Image
         working-directory: ./${{ matrix.module }}
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ matrix.module }}:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/${{ matrix.module }}:latest
+          docker build -t devopsxkeepcoding/martian-bank:${{ matrix.module }}-latest .
+          docker push devopsxkeepcoding/martian-bank:${{ matrix.module }}-latest
           
