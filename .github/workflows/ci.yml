@@ -180,7 +180,7 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          if [ "${{ matrix.module }}" = "ui" ]; then
+          if [ "${{ matrix.module }}" = "ui" ] || [ "${{ matrix.module }}" = "nginx" ]; then
             # Para 'ui', cambiamos el contexto al directorio 'ui'
             docker build -f ui/Dockerfile -t devopsxkeepcoding/martian-bank:ui-latest ui/
             docker push devopsxkeepcoding/martian-bank:ui-latest
