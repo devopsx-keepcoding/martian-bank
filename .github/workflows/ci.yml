@@ -5,12 +5,12 @@ on:
     branches:
       - main
       - develop
-      - feature/semantic-release
+      - feature/module-independent-images
   pull_request:
     branches:
       - main
       - develop
-      - feature/semantic-release
+      - feature/module-independent-images
 jobs:
   secrets_scan:
     name: Scan for exposed secrets
