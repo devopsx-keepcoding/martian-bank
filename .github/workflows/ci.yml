@@ -173,12 +173,14 @@ jobs:
         run: npx semantic-release --dry-run  
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
                 
 
   docker-build:
     name: Build and Push Docker Images
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} 
     needs: [lint, unit-test-customer-auth, unit-test-ui,semantic-release] # Se ejecuta después de lint y tests
     strategy:
       matrix:
@@ -227,20 +229,20 @@ jobs:
         run: |
           echo "Running semantic-release in dry-run mode for debugging..."
           npx semantic-release --dry-run
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }} 
+      
+      - name: Print GITHUB_TOKEN Length
+        run: echo -n "$GITHUB_TOKEN" | wc -c
+          
 
-      - name: Verify GH_TOKEN
+      - name: Verify GITHUB_TOKEN
         run: |
-          if [ -z "$GH_TOKEN" ]; then
-            echo "Error: GH_TOKEN is not set."
+          if [ -z "$GITHUB_TOKEN" ]; then
+            echo "Error: GITHUB_TOKEN is not set."
             exit 1
           fi
-            echo "GH_TOKEN is set."
-        env:
-            GH_TOKEN: ${{ secrets.GH_TOKEN }} 
+            echo "GIHUB_TOKEN is set."
 
-      - name: Determine Semantic Version
+      - name: Determine Semantic Version     
         id: version
         run: |
           VERSION=$(npx semantic-release --dry-run | grep -Po '(?<=The next release version is )[^ ]+')
@@ -250,7 +252,7 @@ jobs:
           fi
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "Determined version: $VERSION"
-      
+
       - name: Debug VERSION
         run: echo "VERSION is ${{ env.VERSION }}"    
     
