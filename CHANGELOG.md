@@ -1,3 +1,10 @@
+## [1.2.4](https://github.com/devopsx-keepcoding/martian-bank/compare/v1.2.3...v1.2.4) (2024-12-11)
+
+
+### Bug Fixes
+
+* docker-build Branch sync ([8a04e20](https://github.com/devopsx-keepcoding/martian-bank/commit/8a04e20c3c080365e38e223d6b13ace1d5e2ef7f))
+
 ## [1.2.3](https://github.com/devopsx-keepcoding/martian-bank/compare/v1.2.2...v1.2.3) (2024-12-11)
 
 
