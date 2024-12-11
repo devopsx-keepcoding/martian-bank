@@ -5,12 +5,12 @@ on:
     branches:
       - main
       - develop
-      - feature/semantic-release
+      - feature/module-independent-images
   pull_request:
     branches:
       - main
       - develop
-      - feature/semantic-release
+      - feature/module-independent-images
 jobs:
   secrets_scan:
     name: Scan for exposed secrets
@@ -155,10 +155,14 @@ jobs:
             -Dsonar.javascript.lcov.reportPaths=customer-auth/coverage/lcov.info,ui/coverage/lcov.info \
             -Dsonar.exclusions=**/node_modules/**,**/__tests__/** \
             -Dsonar.coverage.exclusions=**/tests/**,**/__tests__/**,**/*.test.*,**/*.spec.*  
-            
+
+#JOB PARA SEMANTIC RELEASE            
   semantic-release:
     name: Semantic Release
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        module: [accounts, atm-locator, customer-auth, dashboard, loan, nginx, transactions, ui]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -168,16 +172,18 @@ jobs:
         with:
           node-version: '20.8.1'
 
-      - name: Install dependencies
+      - name: Install dependencies for ${{ matrix.module }}
+        working-directory: ./${{ matrix.module }}
         run: npm ci
 
-      - name: Run Semantic Release
-        run: npx semantic-release --dry-run  
+      - name: Run Semantic Release for ${{ matrix.module }}
+        working-directory: ./${{ matrix.module }}
+        run: npx semantic-release --dry-run
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
                 
-
+#JOB PARA LA CONSTRUCCION DE IMAGENES Y PUBLICACION EN DOCKERHUB
   docker-build:
     name: Build and Push Docker Images
     runs-on: ubuntu-latest
@@ -212,36 +218,32 @@ jobs:
       
       - name: Fetch and update remote branch
         run: |
-          git fetch origin feature/semantic-release
-          git checkout feature/semantic-release
-          git pull origin feature/semantic-release
+          git fetch origin ${{ github.ref_name }}
+          git checkout ${{ github.ref_name }}
+          git pull origin ${{ github.ref_name }}
 
       - name: Verify branch sync
         run: |
           git fetch origin
           LOCAL=$(git rev-parse HEAD)
-          REMOTE=$(git rev-parse origin/feature/semantic-release)
+          REMOTE=$(git rev-parse origin/${{ github.ref_name }})
           if [ "$LOCAL" != "$REMOTE" ]; then
             echo "Local branch is out of sync with the remote branch."
             exit 1
           fi
           echo "Branches are in sync."
-        
-      - name: Debug Semantic Release
-        run: |
-          echo "Running semantic-release in dry-run mode for debugging..."
-          npx semantic-release --dry-run
       
-      - name: Determine Semantic Version     
+      - name: Determine Module Version
         id: version
+        working-directory: ./${{ matrix.module }}
         run: |
           VERSION=$(npx semantic-release --dry-run | grep -Po '(?<=The next release version is )[^ ]+')
           if [ -z "$VERSION" ]; then
-            echo "Error: VERSION is not generated."
+            echo "Error: VERSION is not generated for ${{ matrix.module }}."
             exit 1
           fi
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "Determined version: $VERSION"
+          echo "Determined version for ${{ matrix.module }}: $VERSION"    
    
       - name: Build and Push Docker Image
         run: |

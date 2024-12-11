@@ -1,5 +1,5 @@
 {
-    "branches": ["main", "develop","feature/semantic-release"],
+    "branches": ["main", "develop", "feature/module-independent-images"],
     "repositoryUrl": "https://github.com/devopsx-keepcoding/martian-bank",
     "plugins": [
       "@semantic-release/commit-analyzer",
