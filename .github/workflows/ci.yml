@@ -3,6 +3,8 @@ name: CI Pipeline
 on:
   push:
     branches:
+      - main
+      - develop
       - feature/semantic-release
   pull_request:
     branches:
@@ -230,18 +232,6 @@ jobs:
           echo "Running semantic-release in dry-run mode for debugging..."
           npx semantic-release --dry-run
       
-      - name: Print GITHUB_TOKEN Length
-        run: echo -n "$GITHUB_TOKEN" | wc -c
-          
-
-      - name: Verify GITHUB_TOKEN
-        run: |
-          if [ -z "$GITHUB_TOKEN" ]; then
-            echo "Error: GITHUB_TOKEN is not set."
-            exit 1
-          fi
-            echo "GIHUB_TOKEN is set."
-
       - name: Determine Semantic Version     
         id: version
         run: |
@@ -252,10 +242,7 @@ jobs:
           fi
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "Determined version: $VERSION"
-
-      - name: Debug VERSION
-        run: echo "VERSION is ${{ env.VERSION }}"    
-    
+   
       - name: Build and Push Docker Image
         run: |
           if [ -z "${{ env.VERSION }}" ]; then
@@ -270,10 +257,7 @@ jobs:
             docker build -f ${{ matrix.module }}/Dockerfile -t devopsxkeepcoding/martian-bank:${{ matrix.module }}-${{ env.VERSION }} .
             docker push devopsxkeepcoding/martian-bank:${{ matrix.module }}-${{ env.VERSION }}
           fi
-      - name: Debug Docker Build Context
-        run: |
-          echo "Building module: ${{ matrix.module }}"
-          echo "Using VERSION: ${{ env.VERSION }}"    
+   
           
   
         
