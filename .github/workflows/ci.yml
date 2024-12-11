@@ -218,15 +218,15 @@ jobs:
       
       - name: Fetch and update remote branch
         run: |
-          git fetch origin feature/semantic-release
-          git checkout feature/semantic-release
-          git pull origin feature/semantic-release
+          git fetch origin ${{ github.ref_name }}
+          git checkout ${{ github.ref_name }}
+          git pull origin ${{ github.ref_name }}
 
       - name: Verify branch sync
         run: |
           git fetch origin
           LOCAL=$(git rev-parse HEAD)
-          REMOTE=$(git rev-parse origin/feature/semantic-release)
+          REMOTE=$(git rev-parse origin/${{ github.ref_name }})
           if [ "$LOCAL" != "$REMOTE" ]; then
             echo "Local branch is out of sync with the remote branch."
             exit 1
