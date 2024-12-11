@@ -175,7 +175,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       
-      - name: Install semantic-release dependencies
+      - name: Install dependencies
         run: npm ci    
 
       - name: Determine Semantic Version
