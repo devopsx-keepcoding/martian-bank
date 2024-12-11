@@ -1,3 +1,10 @@
+## [1.2.5](https://github.com/devopsx-keepcoding/martian-bank/compare/v1.2.4...v1.2.5) (2024-12-11)
+
+
+### Bug Fixes
+
+* GH_TOKEN Configuration ([ece4e71](https://github.com/devopsx-keepcoding/martian-bank/commit/ece4e711323fe6a0c73e571fc89d849f58813607))
+
 ## [1.2.4](https://github.com/devopsx-keepcoding/martian-bank/compare/v1.2.3...v1.2.4) (2024-12-11)
 
 
