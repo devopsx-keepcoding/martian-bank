@@ -226,8 +226,19 @@ jobs:
         run: |
           echo "Running semantic-release in dry-run mode for debugging..."
           npx semantic-release --dry-run
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }} 
+           
+      - name: Verify GH_TOKEN
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "Error: GH_TOKEN is not set."
+            exit 1
+          fi
+            echo "GH_TOKEN is set."
+          env:
+            GH_TOKEN: ${{ secrets.GH_TOKEN }} 
 
-       
       - name: Determine Semantic Version
         id: version
         run: |
