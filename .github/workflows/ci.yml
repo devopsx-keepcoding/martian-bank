@@ -185,17 +185,31 @@ jobs:
 
       - name: Determine Semantic Version
         id: version
-        run: echo "VERSION=$(npx semantic-release --dry-run | grep 'The next release version is' | awk '{print $NF}')" >> $GITHUB_ENV
+        run: |
+          VERSION=$(npx semantic-release | grep 'The next release version is' | awk '{print $NF}')
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+      
+      - name: Debug VERSION
+        run: echo "VERSION is ${{ env.VERSION }}"    
     
       - name: Build and Push Docker Image
         run: |
-            if [ "${{ matrix.module }}" = "ui" ] || [ "${{ matrix.module }}" = "nginx" ]; then
-              docker build -f ui/Dockerfile -t devopsxkeepcoding/martian-bank:${{ matrix.module }}-${{ env.VERSION }} ui/
-              docker push devopsxkeepcoding/martian-bank:${{ matrix.module }}-${{ env.VERSION }}
-            else
-              docker build -f ${{ matrix.module }}/Dockerfile -t devopsxkeepcoding/martian-bank:${{ matrix.module }}-${{ env.VERSION }} .
-              docker push devopsxkeepcoding/martian-bank:${{ matrix.module }}-${{ env.VERSION }}
-            fi
+          if [ -z "${{ env.VERSION }}" ]; then
+            echo "Error: VERSION is not set."
+            exit 1
+          fi
+    
+          if [ "${{ matrix.module }}" = "ui" ] || [ "${{ matrix.module }}" = "nginx" ]; then
+            docker build -f ui/Dockerfile -t devopsxkeepcoding/martian-bank:${{ matrix.module }}-${{ env.VERSION }} ui/
+            docker push devopsxkeepcoding/martian-bank:${{ matrix.module }}-${{ env.VERSION }}
+          else
+            docker build -f ${{ matrix.module }}/Dockerfile -t devopsxkeepcoding/martian-bank:${{ matrix.module }}-${{ env.VERSION }} .
+            docker push devopsxkeepcoding/martian-bank:${{ matrix.module }}-${{ env.VERSION }}
+          fi
+      - name: Debug Docker Build Context
+        run: |
+          echo "Building module: ${{ matrix.module }}"
+          echo "Using VERSION: ${{ env.VERSION }}"    
           
   semantic-release:
     name: Semantic Release
