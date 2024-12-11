@@ -170,10 +170,11 @@ jobs:
         run: npm ci
 
       - name: Run Semantic Release
+        run: npx semantic-release --dry-run  
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release        
+                
 
   docker-build:
     name: Build and Push Docker Images
