@@ -8,8 +8,7 @@
         "preset": "angular",
         "releaseRules": [
           { "type": "fix", "release": "patch" },
-          { "type": "feat", "release": "minor" },
-          { "scope": "dockerfile", "release": "patch" }
+          { "type": "feat", "release": "minor" }
         ]
       }
     ],
