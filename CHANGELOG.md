@@ -1,3 +1,10 @@
+## [1.2.7](https://github.com/devopsx-keepcoding/martian-bank/compare/v1.2.6...v1.2.7) (2024-12-11)
+
+
+### Bug Fixes
+
+* GH_TOKEN name fix ([e2cd51b](https://github.com/devopsx-keepcoding/martian-bank/commit/e2cd51b183dbb6afbda59144804865a406caf1c7))
+
 ## [1.2.6](https://github.com/devopsx-keepcoding/martian-bank/compare/v1.2.5...v1.2.6) (2024-12-11)
 
 
