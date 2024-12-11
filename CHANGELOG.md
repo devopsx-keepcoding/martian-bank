@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/devopsx-keepcoding/martian-bank/compare/v1.2.1...v1.2.2) (2024-12-11)
+
+
+### Bug Fixes
+
+* Release version fix. ([217932f](https://github.com/devopsx-keepcoding/martian-bank/commit/217932fb71fd680ddf8ffb4ce9de106dc4496409))
+
 ## [1.2.1](https://github.com/devopsx-keepcoding/martian-bank/compare/v1.2.0...v1.2.1) (2024-12-11)
 
 
