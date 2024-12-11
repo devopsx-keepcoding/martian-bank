@@ -8,7 +8,7 @@ on:
     branches:
       - main
       - develop
-
+      - feature/semantic-release
 jobs:
   secrets_scan:
     name: Scan for exposed secrets
@@ -228,7 +228,7 @@ jobs:
           npx semantic-release --dry-run
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }} 
-           
+
       - name: Verify GH_TOKEN
         run: |
           if [ -z "$GH_TOKEN" ]; then
@@ -236,7 +236,7 @@ jobs:
             exit 1
           fi
             echo "GH_TOKEN is set."
-          env:
+        env:
             GH_TOKEN: ${{ secrets.GH_TOKEN }} 
 
       - name: Determine Semantic Version
