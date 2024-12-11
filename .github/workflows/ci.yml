@@ -172,13 +172,13 @@ jobs:
         with:
           node-version: '20.8.1'
 
-      - name: Install dependencies
-        working-directory: ./${{ matrix.module }} 
+      - name: Install dependencies for ${{ matrix.module }}
+        working-directory: ./${{ matrix.module }}
         run: npm ci
 
-      - name: Run Semantic Release
-        working-directory: ./${{ matrix.module }}  
-        run: npx semantic-release --dry-run  
+      - name: Run Semantic Release for ${{ matrix.module }}
+        working-directory: ./${{ matrix.module }}
+        run: npx semantic-release --dry-run
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
