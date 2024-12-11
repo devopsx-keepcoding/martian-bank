@@ -18,7 +18,7 @@ spec:
         spec:
             containers:
                 - name: atm-locator
-                  image: devopsxkeepcoding/atm-locator:latest
+                  image: devopsxkeepcoding/martian-bank:atm-locator-latest
                   imagePullPolicy: IfNotPresent                
                   env:
                     {{- if not .Values.mongodb.enabled }}

@@ -18,7 +18,8 @@ spec:
     spec:
       containers:
         - name: accounts
-          image: devopsxkeepcoding/accounts:latest          
+          image: devopsxkeepcoding/martian-bank:accounts-latest
+          imagePullPolicy: IfNotPresent          
           envFrom:
             - configMapRef:
                 name: configmap-martianbank

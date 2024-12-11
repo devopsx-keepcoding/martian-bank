@@ -18,7 +18,7 @@ spec:
         spec:
             containers:
                 - name: customer-auth
-                  image: devopsxkeepcoding/customer-auth:latest
+                  image: devopsxkeepcoding/martian-bank:customer-auth-latest
                   imagePullPolicy: IfNotPresent 
                   env:
                     {{- if not .Values.mongodb.enabled }}

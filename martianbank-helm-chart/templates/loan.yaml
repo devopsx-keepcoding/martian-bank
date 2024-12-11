@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: loan
-          image: devopsxkeepcoding/loan:latest
+          image: devopsxkeepcoding/martian-bank:loan-latest
           imagePullPolicy: IfNotPresent
           envFrom:
             - configMapRef:

@@ -68,7 +68,7 @@ autoscaling:
 nodeSelector:
   # If enabled is true it deploys pods only in nodes with the key:vale Ex. role:worker
   # enabled=true for a minikube 3 nodes setup (2 worker nodes + control plane)
-  enabled: false
+  enabled: true
   role: worker
 
 tolerations: []
@@ -90,7 +90,7 @@ nginx:
 aws:
   # If enabled is true it will add annotations in nginx service to deploy a Network Load Balancer
   # in AWS to access the application from outside the cluster.
-  enabled: true
+  enabled: false
 
 
 

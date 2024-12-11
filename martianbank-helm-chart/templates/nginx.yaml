@@ -19,7 +19,7 @@ spec:
         spec:
             containers:
                 - name: nginx
-                  image: devopsxkeepcoding/nginx:latest
+                  image: devopsxkeepcoding/martian-bank:nginx-latest
                   imagePullPolicy: IfNotPresent 
                   livenessProbe:
                     tcpSocket:

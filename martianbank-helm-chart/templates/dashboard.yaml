@@ -18,7 +18,7 @@ spec:
         spec:
             containers:
                 - name: dashboard
-                  image: devopsxkeepcoding/dashboard:latest
+                  image: devopsxkeepcoding/martian-bank:dashboard-latest
                   imagePullPolicy: IfNotPresent
                   env:
                       - name: SERVICE_PROTOCOL
