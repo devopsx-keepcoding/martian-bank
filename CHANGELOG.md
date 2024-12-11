@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/devopsx-keepcoding/martian-bank/compare/v1.1.0...v1.2.0) (2024-12-11)
+
+
+### Features
+
+* Semantic release dependencies docker build job ([c924beb](https://github.com/devopsx-keepcoding/martian-bank/commit/c924bebb29f4890d0ba660494d250963f0bcee86))
+
 # [1.1.0](https://github.com/devopsx-keepcoding/martian-bank/compare/v1.0.0...v1.1.0) (2024-12-11)
 
 
