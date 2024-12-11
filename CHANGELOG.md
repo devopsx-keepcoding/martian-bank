@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/devopsx-keepcoding/martian-bank/compare/v1.2.0...v1.2.1) (2024-12-11)
+
+
+### Bug Fixes
+
+* Node version docker-build job ([d20c2f7](https://github.com/devopsx-keepcoding/martian-bank/commit/d20c2f7f71ba8e2a929f5c977037eedc9bf00529))
+
 # [1.2.0](https://github.com/devopsx-keepcoding/martian-bank/compare/v1.1.0...v1.2.0) (2024-12-11)
 
 
