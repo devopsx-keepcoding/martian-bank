@@ -185,6 +185,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -202,12 +204,30 @@ jobs:
       
       - name: Install dependencies
         run: npm ci    
+      
+      - name: Fetch and update remote branch
+        run: |
+          git fetch origin feature/semantic-release
+          git checkout feature/semantic-release
+          git pull origin feature/semantic-release
 
+      - name: Verify branch sync
+        run: |
+          git fetch origin
+          LOCAL=$(git rev-parse HEAD)
+          REMOTE=$(git rev-parse origin/feature/semantic-release)
+          if [ "$LOCAL" != "$REMOTE" ]; then
+            echo "Local branch is out of sync with the remote branch."
+            exit 1
+          fi
+          echo "Branches are in sync."
+        
       - name: Debug Semantic Release
         run: |
           echo "Running semantic-release in dry-run mode for debugging..."
           npx semantic-release --dry-run
 
+       
       - name: Determine Semantic Version
         id: version
         run: |
