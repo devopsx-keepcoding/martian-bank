@@ -1,23 +1,34 @@
 {
-    "branches": ["main", "develop", "feature/module-independent-images"],
-    "repositoryUrl": "https://github.com/devopsx-keepcoding/martian-bank",
-    "plugins": [
+  "branches": ["main", "develop", "feature/module-independent-images"],
+  "repositoryUrl": "https://github.com/devopsx-keepcoding/martian-bank",
+  "plugins": [
+    [
       "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/changelog",
-      [
-        "@semantic-release/github",
-        {
-          "assets": ["dist/**/*.{js,css}", "*.tgz"]
-        }
-      ],
-      [
-        "@semantic-release/git",
-        {
-          "assets": ["CHANGELOG.md", "package.json", "package-lock.json"],
-          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-        }
-      ]
+      {
+        "preset": "angular",
+        "releaseRules": [
+          { "type": "fix", "release": "patch" },
+          { "type": "feat", "release": "minor" },
+          { "scope": "dockerfile", "release": "patch" }
+        ]
+      }
+    ],
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/changelog",
+    [
+      "@semantic-release/github",
+      {
+        "assets": ["dist/**/*.{js,css}", "*.tgz"]
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": ["CHANGELOG.md", "package.json", "package-lock.json"],
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
     ]
-  }
+  ]
+}
+
   
