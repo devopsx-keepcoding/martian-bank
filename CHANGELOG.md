@@ -1,3 +1,10 @@
+## [1.2.3](https://github.com/devopsx-keepcoding/martian-bank/compare/v1.2.2...v1.2.3) (2024-12-11)
+
+
+### Bug Fixes
+
+* semantic execution order ([d4f6650](https://github.com/devopsx-keepcoding/martian-bank/commit/d4f6650ae59a2279bcd475b07e0657da844e0901))
+
 ## [1.2.2](https://github.com/devopsx-keepcoding/martian-bank/compare/v1.2.1...v1.2.2) (2024-12-11)
 
 
