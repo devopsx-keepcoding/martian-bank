@@ -4,7 +4,7 @@
 
 FROM --platform=linux/amd64 node:14
 WORKDIR /usr/src/app/
-COPY package*.json /usr/src/app/
+COPY customer-auth/package*.json ./
 RUN npm install
 COPY . ./
 EXPOSE 8000

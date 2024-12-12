@@ -1,0 +1,20 @@
+# Excluir todo lo que no sea necesario globalmente
+node_modules
+dist
+logs
+.git
+
+# Excluir archivos raíz innecesarios
+package.json
+package-lock.json
+
+# Incluir únicamente los recursos necesarios para cada módulo
+!accounts/
+!atm-locator/
+!customer-auth/
+!dashboard/
+!loan/
+!nginx/
+!protobufs/
+!transactions/
+!ui/

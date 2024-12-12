@@ -4,9 +4,9 @@
 
 FROM --platform=linux/amd64 python
 
-RUN mkdir /service
-COPY ./protobufs/ /service/protobufs/
-COPY ./loan/ /service/loan/
+WORKDIR /service
+COPY protobufs/ /service/protobufs/
+COPY loan/ /service/loan/
 WORKDIR /service/loan
 RUN python -m pip install --upgrade pip
 RUN python -m pip install -r requirements.txt
