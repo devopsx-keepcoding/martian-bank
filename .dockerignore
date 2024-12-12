@@ -6,6 +6,10 @@ logs
 .github
 package.json
 package-lock.json
+coverage
+
+# Excluir directorios de test
+__test__/
 
 # Incluir únicamente los recursos necesarios para cada módulo
 !atm-locator/
