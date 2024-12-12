@@ -1,0 +1,24 @@
+# Excluir todo lo que no sea necesario globalmente
+node_modules
+dist
+logs
+.git
+.github
+package.json
+package-lock.json
+coverage
+
+# Excluir directorios de test
+__test__/
+
+# Incluir únicamente los recursos necesarios para cada módulo
+!atm-locator/
+!dashboard/
+!protobufs/
+!customer-auth/
+!transactions/
+!loan/
+!ui/
+!nginx/
+
+

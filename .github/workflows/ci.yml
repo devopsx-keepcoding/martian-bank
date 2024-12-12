@@ -5,12 +5,12 @@ on:
     branches:
       - main
       - develop
-      - feature/module-independent-images
+      - fix/dockerfile-updates
   pull_request:
     branches:
       - main
       - develop
-      - feature/module-independent-images
+
 jobs:
   secrets_scan:
     name: Scan for exposed secrets
@@ -251,14 +251,9 @@ jobs:
             echo "Error: VERSION is not set."
             exit 1
           fi
-    
-          if [ "${{ matrix.module }}" = "ui" ] || [ "${{ matrix.module }}" = "nginx" ]; then
-            docker build -f ui/Dockerfile -t devopsxkeepcoding/martian-bank:${{ matrix.module }}-${{ env.VERSION }} ui/
-            docker push devopsxkeepcoding/martian-bank:${{ matrix.module }}-${{ env.VERSION }}
-          else
-            docker build -f ${{ matrix.module }}/Dockerfile -t devopsxkeepcoding/martian-bank:${{ matrix.module }}-${{ env.VERSION }} .
-            docker push devopsxkeepcoding/martian-bank:${{ matrix.module }}-${{ env.VERSION }}
-          fi
+
+          docker build -f ${{ matrix.module }}/Dockerfile -t devopsxkeepcoding/martian-bank:${{ matrix.module }}-${{ env.VERSION }} .
+          docker push devopsxkeepcoding/martian-bank:${{ matrix.module }}-${{ env.VERSION }}
    
           
   

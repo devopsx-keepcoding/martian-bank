@@ -11,6 +11,8 @@ import yaml from 'js-yaml';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
+const logger = console;
+
 const getYamlContent = async () => {
   try {
     const swaggerSpecsFile = join(

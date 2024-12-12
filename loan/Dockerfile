@@ -4,7 +4,7 @@
 
 FROM --platform=linux/amd64 python
 
-RUN mkdir /service
+WORKDIR /service
 COPY protobufs/ /service/protobufs/
 COPY loan/ /service/loan/
 WORKDIR /service/loan

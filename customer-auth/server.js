@@ -19,6 +19,8 @@ import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 import userRoutes from './routes/userRoutes.js';
 
+const logger = console;
+
 // Load environment variables from .env file
 dotenv.config();
 
@@ -47,5 +49,5 @@ app.use(notFound);
 app.use(errorHandler);
 
 app.listen(port, () => {
-  logger.info(`customer-api server started on port ${port}`.green.bold);
+  logger.info(`customer-api server started on port ${port}`);
 });
