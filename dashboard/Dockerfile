@@ -5,8 +5,8 @@
 FROM --platform=linux/amd64 python
 
 RUN mkdir /service
-COPY protobufs/ /service/protobufs/
-COPY dashboard/ /service/dashboard/
+COPY ./protobufs/ /service/protobufs/
+COPY ./dashboard/ /service/dashboard/
 WORKDIR /service/dashboard
 RUN python -m pip install --upgrade pip
 RUN python -m pip install -r requirements.txt

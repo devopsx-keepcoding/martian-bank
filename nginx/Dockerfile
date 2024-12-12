@@ -3,4 +3,4 @@
 # license that can be found in the LICENSE file.
 
 FROM --platform=linux/amd64 nginx
-COPY ./default.conf /etc/nginx/conf.d/
+COPY default.conf /etc/nginx/conf.d/
