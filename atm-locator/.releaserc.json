@@ -1,5 +1,5 @@
 {
-  "branches": ["main", "develop", "feature/module-independent-images"],
+  "branches": ["main", "develop", "fix/dockerfile-updates"],
   "repositoryUrl": "https://github.com/devopsx-keepcoding/martian-bank",
   "plugins": [
     [
