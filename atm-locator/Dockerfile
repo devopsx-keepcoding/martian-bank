@@ -6,6 +6,6 @@ FROM --platform=linux/amd64 node:20
 WORKDIR /usr/src/app
 COPY atm-locator/package*.json ./
 RUN npm install
-COPY . ./
+COPY atm-locator/ ./
 EXPOSE 8001
 CMD ["npm", "start"]
