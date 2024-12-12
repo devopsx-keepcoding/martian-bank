@@ -3,18 +3,18 @@ node_modules
 dist
 logs
 .git
-
-# Excluir archivos raíz innecesarios
+.github
 package.json
 package-lock.json
 
 # Incluir únicamente los recursos necesarios para cada módulo
-!accounts/
 !atm-locator/
-!customer-auth/
 !dashboard/
-!loan/
-!nginx/
 !protobufs/
+!customer-auth/
 !transactions/
+!loan/
 !ui/
+!nginx/
+
+
