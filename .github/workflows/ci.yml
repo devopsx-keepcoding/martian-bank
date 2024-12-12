@@ -5,12 +5,12 @@ on:
     branches:
       - main
       - develop
-      - feature/module-independent-images
+      - fix/dockerfile-updates
   pull_request:
     branches:
       - main
       - develop
-      - feature/module-independent-images
+      - dockerfile-updates
 jobs:
   secrets_scan:
     name: Scan for exposed secrets
