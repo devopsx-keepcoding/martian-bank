@@ -17,8 +17,8 @@ spec:
         spec:
             containers:
                 - name: transactions
-                  image: devopsxkeepcoding/martian-bank:transactions-latest
-                  imagePullPolicy: IfNotPresent
+                  image: devopsxkeepcoding/martian-bank:transactions-1.3.0
+                  imagePullPolicy: Always
                   envFrom:
                     - configMapRef:
                         name: configmap-martianbank
