@@ -3,76 +3,61 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: customer-auth
-  labels:
-    app: customer-auth
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: customer-auth
-  template:
-    metadata:
-      labels:
+    name: customer-auth
+    labels:
         app: customer-auth
-    spec:
-      initContainers:
-        - name: check-message-bus-ready
-          image: busybox:latest
-          command: ['sh', '-c', 'until nc -vz $(DATABASE_HOST) 27017; do echo "Waiting for mongodb service"; sleep 2; done;']
-          env:
-            - name: DATABASE_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: martianbanktest-mongodb-secret
-                  key: database-host
-      containers:
-        - name: customer-auth
-          image: devopsxkeepcoding/martian-bank:customer-auth-1.3.0
-          imagePullPolicy: Always
-          env:
-            - name: NODE_ENV
-              value: production
-            - name: PORT 
-              value: "8000"
-            - name: DB_URL
-              value: {{ .Values.mongodb.urlTemplate }}
-            - name: MONGODB_ROOT_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: martianbanktest-mongodb-secret
-                  key: mongodb-root-username
-            - name: MONGODB_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: martianbanktest-mongodb-secret
-                  key: mongodb-root-password
-            - name: DATABASE_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: martianbanktest-mongodb-secret
-                  key: database-host
-          livenessProbe:
-            tcpSocket:
-              port: 8000
-            initialDelaySeconds: 10
-            periodSeconds: 20
-          readinessProbe:
-            tcpSocket:
-              port: 8000
-            initialDelaySeconds: 10
-            periodSeconds: 20
-          resources:
-            requests:
-              memory: {{ .Values.resources.requests.memory }}
-              cpu: {{ .Values.resources.requests.cpu }}
-            limits:
-              memory: {{ .Values.resources.limits.memory }}
-              cpu: {{ .Values.resources.limits.cpu }}
-      nodeSelector:   
-        {{- if .Values.nodeSelector.enabled }}
-          role: {{ .Values.nodeSelector.role }}
-        {{- end }}
+spec:    
+    replicas: 1
+    selector:
+        matchLabels:
+            app: customer-auth
+    template:
+        metadata:
+            labels:
+                app: customer-auth
+        spec:
+            initContainers:
+            #During this Pod's initialization, check that mongodb service is up and running before starting this pod
+                - name: check-message-bus-ready
+                  image: busybox:latest
+                  command: ['sh', '-c', 'until nc -vz mongodb 27017; do echo "Waiting for mongodb service"; sleep 2; done;']
+            containers:
+                - name: customer-auth
+                  image: devopsxkeepcoding/martian-bank:customer-auth-1.3.0
+                  imagePullPolicy: Always 
+                  env:
+                    {{- if not .Values.mongodb.enabled }}
+                      - name: DATABASE_HOST
+                        value: "root:example@mongodb"
+                    {{- end }}
+                      - name: NODE_ENV
+                        value: production
+                      - name: PORT 
+                        value: "8000"
+                  envFrom:
+                      - configMapRef:
+                          name: configmap-martianbank
+                  livenessProbe:
+                    tcpSocket:
+                      port: 8000
+                    initialDelaySeconds: 10
+                    periodSeconds: 20
+                  readinessProbe:
+                    tcpSocket:
+                      port: 8000
+                    initialDelaySeconds: 10
+                    periodSeconds: 20
+                  resources:
+                    requests:
+                      memory: {{ .Values.resources.requests.memory }}
+                      cpu: {{ .Values.resources.requests.cpu }}
+                    limits:
+                      memory: {{ .Values.resources.limits.memory }}
+                      cpu: {{ .Values.resources.limits.cpu }}
+            nodeSelector:   
+              {{- if .Values.nodeSelector.enabled }}
+                role: {{ .Values.nodeSelector.role }}
+              {{- end }}
 ---
 apiVersion: v1
 kind: Service
