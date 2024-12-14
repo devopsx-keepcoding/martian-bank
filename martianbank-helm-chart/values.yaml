@@ -102,6 +102,7 @@ mongodb:
   ## If you want to use local MongoDB, then set enabled to 'false'
   ##
   enabled: false
+  urlTemplate: "mongodb://$(MONGODB_ROOT_USERNAME):$(MONGODB_ROOT_PASSWORD)@$(DATABASE_HOST):27017"
 
 SERVICE_PROTOCOL: "http"
 DB_URL:  
