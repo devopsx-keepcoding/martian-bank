@@ -1,5 +1,5 @@
 {
-  "branches": ["main", "develop", "fix/dockerfile-updates"],
+  "branches": ["main", "develop"],
   "repositoryUrl": "https://github.com/devopsx-keepcoding/martian-bank",
   "plugins": [
     [
