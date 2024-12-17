@@ -1,5 +1,7 @@
 # loan
 ---
+# loan
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -26,11 +28,16 @@ spec:
           image: devopsxkeepcoding/martian-bank:loan-1.3.0
           imagePullPolicy: Always
           envFrom:
-            - configMapRef:
-                name: configmap-martianbank
+            - secretRef:
+                name: mongodb-secret
           env:
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: DB_URL
             - name: SERVICE_PROTOCOL
-              value: {{.Values.SERVICE_PROTOCOL}}
+              value: {{ .Values.SERVICE_PROTOCOL }}
           livenessProbe:
             tcpSocket:
               port: 50053

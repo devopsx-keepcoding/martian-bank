@@ -102,7 +102,6 @@ Cifrar tu Secret con kubeseal
 kubectl create -f martianbank-helm-chart/templates/secrets.yaml --dry-run=client -o json | kubeseal --cert mycert.pem -o yaml > martianbank-helm-chart/templates/sealed-mongodb-secret.yaml
 ```
 
-
 # Resumen del Proyecto
 
 ## Configuración de MongoDB con Sealed Secrets

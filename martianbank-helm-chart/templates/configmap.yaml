@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: configmap-martianbank
-data:
-    DB_URL: "mongodb://root:example@mongodb:27017"
