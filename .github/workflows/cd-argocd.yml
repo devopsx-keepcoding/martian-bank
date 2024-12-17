@@ -3,6 +3,7 @@ name: CD with ArgoCD
 on:
   push:
     branches:
+      - develop
       - feature/argocd-setup
 jobs:
   deploy:
