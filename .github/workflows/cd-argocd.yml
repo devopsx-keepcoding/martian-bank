@@ -1,0 +1,28 @@
+name: CD with ArgoCD
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install ArgoCD CLI
+      run: |
+        curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+        chmod +x argocd
+        sudo mv argocd /usr/local/bin/
+
+    - name: Sync ArgoCD Application
+      env:
+        ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
+        ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_AUTH_TOKEN }}
+      run: |
+        argocd login $ARGOCD_SERVER --insecure --auth-token $ARGOCD_AUTH_TOKEN
+        argocd app sync martian-bank --prune
