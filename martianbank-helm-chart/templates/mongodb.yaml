@@ -23,9 +23,15 @@ spec:
         image: mongo
         env:
           - name: MONGO_INITDB_ROOT_USERNAME
-            value: root
+            valueFrom:
+              secretKeyRef:
+                name: mongodb-secret
+                key: mongodb-root-username
           - name: MONGO_INITDB_ROOT_PASSWORD
-            value: example
+            valueFrom:
+              secretKeyRef:
+                name: mongodb-secret
+                key: mongodb-root-password
       volumes:
       - name: mo-data
         persistentVolumeClaim:
