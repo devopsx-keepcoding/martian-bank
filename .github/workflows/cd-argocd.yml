@@ -3,8 +3,6 @@ name: CD with ArgoCD
 on:
   push:
     branches:
-      - main  # O la rama que quieras monitorizar
-      - develop
       - feature/argocd-setup
 jobs:
   deploy:
