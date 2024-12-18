@@ -3,12 +3,12 @@ mongodb:
   - name: MONGO_INITDB_ROOT_USERNAME
     valueFrom:
       secretKeyRef:
-        name: martianbanktest-mongodb-secret
+        name: mongodb-secret
         key: mongodb-root-username
   - name: MONGO_INITDB_ROOT_PASSWORD
     valueFrom:
       secretKeyRef:
-        name: martianbanktest-mongodb-secret
+        name: mongodb-secret
         key: mongodb-root-password
   uri: mongodb://root:example@mongodb:27017
 serviceMonitor:
