@@ -17,7 +17,7 @@ spec:
                 app: dashboard
         spec:
             initContainers:
-            #During this Pod's initialization, check that mongodb service is up and running before starting this pod
+            # During this Pod's initialization, check that mongodb service is up and running before starting this pod
                 - name: check-message-bus-ready
                   image: busybox:latest
                   command: ['sh', '-c', 'until nc -vz mongodb 27017; do echo "Waiting for mongodb service"; sleep 2; done;']
@@ -27,7 +27,7 @@ spec:
                   imagePullPolicy: Always
                   env:
                       - name: SERVICE_PROTOCOL
-                        value: {{.Values.SERVICE_PROTOCOL}}
+                        value: {{ .Values.SERVICE_PROTOCOL }}
                       - name: ACCOUNT_HOST
                         value: accounts
                       - name: LOAN_HOST
@@ -38,9 +38,14 @@ spec:
                         value: customer-auth
                       - name: ATM_LOCATOR_HOST
                         value: atm-locator
+                      - name: DB_URL
+                        valueFrom:
+                          secretKeyRef:
+                            name: mongodb-secret
+                            key: DB_URL
                   envFrom:
-                      - configMapRef:
-                          name: configmap-martianbank
+                      - secretRef:
+                          name: mongodb-secret
                   livenessProbe:
                     tcpSocket:
                       port: 5000

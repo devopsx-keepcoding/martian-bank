@@ -17,7 +17,7 @@ spec:
                 app: atm-locator
         spec:
             initContainers:
-            #During this Pod's initialization, check that mongodb service is up and running before starting this pod
+            # During this Pod's initialization, check that mongodb service is up and running before starting this pod
                 - name: check-message-bus-ready
                   image: busybox:latest
                   command: ['sh', '-c', 'until nc -vz mongodb 27017; do echo "Waiting for mongodb service"; sleep 2; done;']
@@ -27,16 +27,21 @@ spec:
                   imagePullPolicy: Always                
                   env:
                     {{- if not .Values.mongodb.enabled }}
-                      - name: DATABASE_HOST
-                        value: "root:example@mongodb"
+                    - name: DATABASE_HOST
+                      value: "root:example@mongodb"
                     {{- end }}
-                      - name: NODE_ENV
-                        value: production
-                      - name: PORT 
-                        value: "8001"
+                    - name: NODE_ENV6
+                      value: production
+                    - name: PORT 
+                      value: "8001"
+                    - name: DB_URL
+                      valueFrom:
+                        secretKeyRef:
+                          name: mongodb-secret
+                          key: DB_URL
                   envFrom:
-                      - configMapRef:
-                          name: configmap-martianbank
+                      - secretRef:
+                          name: mongodb-secret
                   livenessProbe:
                     tcpSocket:
                       port: 8001
@@ -56,7 +61,7 @@ spec:
                       cpu: {{ .Values.resources.limits.cpu }}
             nodeSelector:   
               {{- if .Values.nodeSelector.enabled }}
-                role: {{ .Values.nodeSelector.role }}
+              role: {{ .Values.nodeSelector.role }}
               {{- end }}
 ---
 apiVersion: v1

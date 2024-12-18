@@ -1,5 +1,4 @@
 # accounts
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -17,7 +16,6 @@ spec:
         app: accounts
     spec:
       initContainers:
-      #During this Pod's initialization, check that mongodb service is up and running before starting this pod
         - name: check-message-bus-ready
           image: busybox:latest
           command: ['sh', '-c', 'until nc -vz mongodb 27017; do echo "Waiting for mongodb service"; sleep 2; done;']
@@ -26,11 +24,16 @@ spec:
           image: devopsxkeepcoding/martian-bank:accounts-1.3.0
           imagePullPolicy: Always          
           envFrom:
-            - configMapRef:
-                name: configmap-martianbank
+            - secretRef:
+                name: mongodb-secret
           env:
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: DB_URL
             - name: SERVICE_PROTOCOL
-              value: {{.Values.SERVICE_PROTOCOL}}
+              value: {{ .Values.SERVICE_PROTOCOL }}
           livenessProbe:
             tcpSocket:
               port: 50051
@@ -52,18 +55,6 @@ spec:
         {{- if .Values.nodeSelector.enabled }}
           role: {{ .Values.nodeSelector.role }}
         {{- end }}
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: accounts
-spec:
-  selector:
-    app: accounts
-  ports:
-    - protocol: TCP
-      port: 50051
-      targetPort: 50051
 ---
 {{- if .Values.autoscaling.enabled }}
 apiVersion: autoscaling/v2
