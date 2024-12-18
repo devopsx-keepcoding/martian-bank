@@ -1,0 +1,61 @@
+{
+  "id": null,
+  "title": "Node Exporter Metrics",
+  "uid": "node-exporter-metrics",
+  "timezone": "browser",
+  "schemaVersion": 30,
+  "version": 1,
+  "refresh": "10s",
+  "panels": [
+    {
+      "type": "graph",
+      "title": "CPU Usage",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "100 - (avg by (instance) (irate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Memory Usage",
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Disk Usage",
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "node_filesystem_size_bytes{fstype!=\"tmpfs\",mountpoint!~\"/run.*\"} - node_filesystem_free_bytes{fstype!=\"tmpfs\",mountpoint!~\"/run.*\"}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Network Traffic",
+      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "irate(node_network_receive_bytes_total[5m])",
+          "refId": "A",
+          "legendFormat": "{{instance}} - Receive"
+        },
+        {
+          "expr": "irate(node_network_transmit_bytes_total[5m])",
+          "refId": "B",
+          "legendFormat": "{{instance}} - Transmit"
+        }
+      ]
+    }
+  ]
+}
