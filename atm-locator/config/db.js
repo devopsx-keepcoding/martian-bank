@@ -14,7 +14,7 @@ import { dirname, join } from "path";
 const connectDB = async () => {
   try {
     console.log(
-      ` --- Connecting to MongoDB for atm-locator microservice --- `.cyan
+      " --- Connecting to MongoDB for atm-locator microservice --- ".cyan
     );
 
     if (process.env.DATABASE_HOST) {
@@ -31,13 +31,13 @@ const connectDB = async () => {
       const conn = await mongoose.connect(process.env.DB_URL);
     }
 
-    console.log(` --- MongoDB Connected --- `.cyan);
+    console.log(" --- MongoDB Connected --- ".cyan);
   } catch (error) {
     console.error(`Error: ${error.message}`.red.bold);
     process.exit(1);
   }
 
-  console.log(`Seeding database with data from atm_data.json ...`);
+  console.log("Seeding database with data from atm_data.json ...");
 
   const atmDataFile = join(
     dirname(fileURLToPath(import.meta.url)),

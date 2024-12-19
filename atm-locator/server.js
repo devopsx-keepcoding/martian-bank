@@ -13,7 +13,7 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import colors from "colors";
 
-import { swaggerDocs } from './utils/swagger.js';
+import { swaggerDocs } from "./utils/swagger.js";
 
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 

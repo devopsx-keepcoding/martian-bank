@@ -4,30 +4,30 @@
  * license that can be found in the LICENSE file.
  */
 
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
+import 'colors'; /**Importacion debido a errores con las pruebas Unitarias */
+const logger = console;
 
 const connectDB = async () => {
   try {
-    console.log(
-      ` --- Connecting to MongoDB for customer-auth microservice --- `.cyan
+    logger.info(
+      ' --- Connecting to MongoDB for customer-auth microservice --- '.cyan,
     );
 
     if (process.env.DATABASE_HOST) {
-      console.log(
-        `Connecting to local MongoDB at ${process.env.DATABASE_HOST} ...`
+      logger.info(
+        `Connecting to local MongoDB at ${process.env.DATABASE_HOST} ...`,
       );
-      const conn = await mongoose.connect(
-        `mongodb://${process.env.DATABASE_HOST}:27017/`
-      );
+      await mongoose.connect(`mongodb://${process.env.DATABASE_HOST}:27017/`);
     } else {
-      console.log(
-        `Connecting to MongoDB Atlas for customer-auth at ${process.env.DB_URL}`
+      logger.info(
+        `Connecting to MongoDB Atlas for customer-auth at ${process.env.DB_URL}`,
       );
-      const conn = await mongoose.connect(process.env.DB_URL);
+      await mongoose.connect(process.env.DB_URL);
     }
-    console.log(` --- MongoDB Connected --- `.cyan);
+    logger.info(' --- MongoDB Connected --- '.cyan);
   } catch (error) {
-    console.error(`Error: ${error.message}`.red.bold);
+    logger.info(`Error: ${error.message}`.red.bold);
     process.exit(1);
   }
 };

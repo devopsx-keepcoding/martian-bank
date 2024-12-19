@@ -4,11 +4,11 @@
  * license that can be found in the LICENSE file.
  */
 
-import { parentPort } from "worker_threads";
-import User from "../models/userModel.js";
-import connectDB from "../config/db.js";
+import { parentPort } from 'worker_threads';
+import User from '../models/userModel.js';
+import connectDB from '../config/db.js';
 
-parentPort.on("message", async (message) => {
+parentPort.on('message', async (message) => {
   const { email, password } = message;
 
   try {

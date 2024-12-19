@@ -1,0 +1,259 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  secrets_scan:
+    name: Scan for exposed secrets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install GitGuardian CLI
+        run: pip install ggshield
+
+      - name: Run GitGuardian secret scan
+        env: 
+          GITGUARDIAN_API_KEY: ${{ secrets.CI_GUARDIAN_API }}  
+        run: ggshield secret scan repo .  
+
+  lint:
+    timeout-minutes: 15
+    name: Lint code
+    runs-on: ubuntu-latest
+    strategy:
+        matrix:
+            module: [atm-locator,customer-auth,ui]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.8.1'
+
+      - name: Install dependencies for ${{ matrix.module }}
+        working-directory: ./${{ matrix.module }}
+        run: npm ci --no-audit --no-fund
+
+      - name: Run ESLint for ${{ matrix.module }}
+        working-directory: ./${{ matrix.module }}
+        run: npx eslint .
+
+  # UNIT TESTS
+
+  unit-test-customer-auth:
+    name: Run Unit Tests for auth
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Node.js  
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.8.1'
+
+      - name: Install dependencies
+        working-directory: ./customer-auth
+        run: npm ci
+    
+      - name: Run tests with coverage
+        working-directory: ./customer-auth
+        run: npm test
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: customer-auth-coverage-report
+          path: customer-auth/coverage
+      
+  unit-test-ui:
+    name: Run Unit Tests for ui
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Node.js  
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.8.1'
+
+      - name: Install dependencies
+        working-directory: ./ui
+        run: npm ci
+    
+      - name: Run tests with coverage
+        working-directory: ./ui
+        run: npm test
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: ui-coverage-report
+          path: ui/coverage
+
+  sonarqube:
+    name: Run SonarQube Analysis
+    runs-on: ubuntu-latest
+    needs: 
+      - unit-test-customer-auth
+      - unit-test-ui
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Download coverage report for customer-auth
+        uses: actions/download-artifact@v3
+        with:
+          name: customer-auth-coverage-report
+          path: ./customer-auth/coverage
+  
+      - name: Download coverage report for ui
+        uses: actions/download-artifact@v3
+        with:
+            name: ui-coverage-report
+            path: ./ui/coverage
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: 11
+          distribution: 'temurin'
+
+      - name: Install SonarQube Scanner
+        run: npm install -g sonarqube-scanner
+
+      - name: Run SonarQube Scanner
+        env:
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          sonar-scanner \
+            -Dsonar.projectKey=devopsx-keepcoding_martian-bank \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+            -Dsonar.organization=devopsx-keepcoding \
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.javascript.lcov.reportPaths=customer-auth/coverage/lcov.info,ui/coverage/lcov.info \
+            -Dsonar.exclusions=**/node_modules/**,**/__tests__/** \
+            -Dsonar.coverage.exclusions=**/tests/**,**/__tests__/**,**/*.test.*,**/*.spec.*  
+
+#JOB PARA SEMANTIC RELEASE            
+  semantic-release:
+    name: Semantic Release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        module: [accounts, atm-locator, customer-auth, dashboard, loan, nginx, transactions, ui]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.8.1'
+
+      - name: Install dependencies for ${{ matrix.module }}
+        working-directory: ./${{ matrix.module }}
+        run: npm ci
+
+      - name: Run Semantic Release for ${{ matrix.module }}
+        working-directory: ./${{ matrix.module }}
+        run: npx semantic-release --dry-run
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+                
+#JOB PARA LA CONSTRUCCION DE IMAGENES Y PUBLICACION EN DOCKERHUB
+  docker-build:
+    name: Build and Push Docker Images
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} 
+    needs: [lint, unit-test-customer-auth, unit-test-ui,semantic-release] # Se ejecuta después de lint y tests
+    strategy:
+      matrix:
+        module: [accounts, atm-locator, customer-auth, dashboard, loan, nginx, transactions, ui]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.8.1  
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2 
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Install dependencies
+        run: npm ci    
+      
+      - name: Fetch and update remote branch
+        run: |
+          git fetch origin ${{ github.ref_name }}
+          git checkout ${{ github.ref_name }}
+          git pull origin ${{ github.ref_name }}
+
+      - name: Verify branch sync
+        run: |
+          git fetch origin
+          LOCAL=$(git rev-parse HEAD)
+          REMOTE=$(git rev-parse origin/${{ github.ref_name }})
+          if [ "$LOCAL" != "$REMOTE" ]; then
+            echo "Local branch is out of sync with the remote branch."
+            exit 1
+          fi
+          echo "Branches are in sync."
+      
+      - name: Determine Module Version
+        id: version
+        working-directory: ./${{ matrix.module }}
+        run: |
+          VERSION=$(npx semantic-release --dry-run | grep -Po '(?<=The next release version is )[^ ]+')
+          if [ -z "$VERSION" ]; then
+            echo "Error: VERSION is not generated for ${{ matrix.module }}."
+            exit 1
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Determined version for ${{ matrix.module }}: $VERSION"    
+   
+      - name: Build and Push Docker Image
+        run: |
+          if [ -z "${{ env.VERSION }}" ]; then
+            echo "Error: VERSION is not set."
+            exit 1
+          fi
+
+          docker build -f ${{ matrix.module }}/Dockerfile -t devopsxkeepcoding/martian-bank:${{ matrix.module }}-${{ env.VERSION }} .
+          docker push devopsxkeepcoding/martian-bank:${{ matrix.module }}-${{ env.VERSION }}
+   
+          
+  
+        
