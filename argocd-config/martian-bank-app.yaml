@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: 'https://github.com/devopsx-keepcoding/martian-bank.git'
-    targetRevision: develop
+    targetRevision: main
     path: martianbank-helm-chart
   destination:
     server: 'https://kubernetes.default.svc'
