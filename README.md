@@ -80,7 +80,7 @@ La instalación de Martian Bank es un proceso flexible que permite despliegues t
      - Resiliencia de la Aplicación (Health checks - liveness y readiness)
      - Control de ejecución de pods (Taints, Tolerations & AffinityRules)
 5. [Monitorización](monitoring-readme.md)
-7. [Estrategia de Ramificación Git Flow](gitflow-readme.md)
+
 
 
 ## 🛠 Metodología de trabajo
