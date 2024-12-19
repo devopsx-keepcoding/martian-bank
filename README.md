@@ -1,28 +1,26 @@
 # Martian Bank: Cloud-Native Microservices Demo Application
 
 ## 🚀 Descripción General
-Martian Bank es una aplicación de demostración de microservicios diseñada para ilustrar prácticas de desarrollo cloud-native y arquitecturas de Kubernetes. 
-<span style="color:red">(Rellenar mas resumen)</span>
 
-![Diagrama de la arquitectura](images/diagrama_de_la_arquitectura.png)
+Martian Bank es una aplicación de demostración de microservicios que simula un banco digital, diseñada para ilustrar prácticas de desarrollo cloud-native y arquitecturas de Kubernetes. La aplicación permite a los clientes gestionar cuentas bancarias, realizar transacciones, localizar cajeros y solicitar préstamos.
 
-### Estructura del Proyecto
+**Características clave:**
+- Construida con React, Node.js y Python
+- Distribuida en contenedores Docker
+- Despliegue flexible mediante Helm
+- Arquitectura de microservicios completa
+- Documentación exhaustiva con Swagger UI
+- Capacidades de pruebas de rendimiento y generación de carga
+- Integración con otros proyectos de código abierto
 
-<span style="color:red">(Modificar estructura)</span>
+## 🎯 Objetivo
 
-```bash
-martian-bank/
-├── charts/                 # Helm charts
-├── services/               # Microservicios
-│   ├── accounts/
-│   ├── atm-locator/
-│   ├── customer-auth/
-│   ├── dashboard/
-│   ├── loan/
-│   └── transactions/
-├── ui/                     # Frontend React
-└── infrastructure/         # Configuraciones de infraestructura
-```
+Construir un pipeline de CI/CD e implementar la infraestructura necesaria para el despliegue continuo de Martian Bank en un clúster de Kubernetes, asegurando una entrega eficiente y automatizada del software. Este enfoque permitirá:
+
+- Despliegue independiente de servicios por equipos
+- Automatización de despliegues tras pasar pruebas de CI
+- Implementación de controles de calidad en cada etapa del pipeline
+- Capacidad de desplegar nuevas versiones de servicios junto a versiones anteriores
 
 ## 🌐 Arquitectura de Microservicios
 
@@ -41,6 +39,9 @@ martian-bank/
 - **UI**: Aplicación React
 - **Nginx**: Reverse proxy para servicios backend y frontend
 
+### Diagrama de la arquitectura
+![Diagrama de la arquitectura](images/diagrama.png)
+
 ## 📦 Requisitos Previos
 - Docker
 - Kubernetes (Minikube recomendado)
@@ -50,81 +51,134 @@ martian-bank/
 
 ## 🔧 Instalación
 
-<span style="color:red">(Resumen)</span>
+La instalación de Martian Bank es un proceso flexible que permite despliegues tanto en entornos locales como en la nube. Esta guía detalla los pasos para configurar la aplicación en Minikube y AWS, abarcando desde la creación del cluster hasta el acceso a la aplicación desplegada.
+- Características clave de la instalación:
+- Configuración de un cluster Kubernetes de 3 nodos
+- Despliegue de servicios de monitoreo como Prometheus
+- Implementación de seguridad con Sealed Secrets
+- Uso de Helm para la gestión de paquetes
+- Opciones para despliegue local y en la nube (AWS)
 
-[Guía de Instalación](docs/GuiaInstalacion.md)
+[Guía de Instalación](guia-instalacion.md)
 
-## 🌟 Features - Funcionalidades
+## 🌟 Features
 
-<span style="color:red">(poner en modo link solo las guias)</span>
-
-### Mínimas
-
-1. [CI](docs/ci.md)
-   - Seguridad: GitGuardian
-   - Linting
-   - Testing: unit test
-   - Análisis de código estático: SonarCloud
-2. [CD: Argo CD](docs/cd.md)
-3. HTTPS y certificados
-4. Despliegue de aplicación en AWS EKS - TERRAFORM
-5. [HELM-CHART](docs/helm-chart.md)
-   - Gestión de Configuración Sensible - sealed-secrets
-   - Probar Configuración Sensibles con secret-store-csi-driver
-   - Añadir init container a microservicios para que espere a mongodb a estar disponible
-   - Inicializar mongodb con tabla de clientes
-   - Alta Disponibilidad (HA) - número mínimo de réplicas de cada microservicio
-     - Resiliencia de la Aplicación - Health checks - liveness y readiness
-     - Controlar en qué nodos se ejecutarán los pods (Taints, Tolerations & AffinityRules)
-     - Probar en local en multi node minikube cluster
-6. [Monitorización](docs/monitorizacion.md)
-
-### Extras
-
-1. Envío de alerta después de algún evento
-2. Implementar alguna estrategia de despliegue: Ex.: Blue/Green - Argo Rollouts
-   - Blue: Martian Bank
-   - Green: KeepCoding Bank (cambiar la UI a KeepCoding Bank)
-3. Utilizar mongodb atlas en GCP en vez de desplegar mongo en el cluster
-4. Backup de Mongodb
-5. Escalabilidad vertical del cluster?
-6. Versionado de aplicaciones automático con Semantic Release
+1. Integración Continua (CI)
+   - [Configuración y Uso de GitGuardian en Workflows de GitHub Actions](gitguardian-readme.md)
+   - [SonarQube](SonarQube-readme.md)
+   - [Ejecución de Unit Tests con GitHub Actions](Unit-Test-readme.md)
+   - [Construcción y Publicación de Imágenes Docker con GitHub Actions](docker-publish-readme.md)
+   - [Configuración y Uso de Semantic Release con GitHub Actions](semantic-release-readme.md)
+   - [Configuración y Uso del Job de Linting con GitHub Actions](lint-readme.md)
+2. Entrega Continua (CD)
+   - [Implementación de ArgoCD para Martian Bank](argocd-readme.md)
+3. [Despliegue en AWS EKS con Terraform](terraform-readme.md)
+4. Helm Chart
+   - [Gestión de Configuración Sensible con Sealed Secrets](sealed-secret-readme.md)
+   - Alta Disponibilidad (HA)
+     - Número mínimo de réplicas por microservicio
+     - Resiliencia de la Aplicación (Health checks - liveness y readiness)
+     - Control de ejecución de pods (Taints, Tolerations & AffinityRules)
+5. [Monitorización](monitoring-readme.md)
+7. [Estrategia de Ramificación Git Flow](gitflow-readme.md)
 
 
-## 🛠 Metodología
-<span style="color:red">(Ejemplo chatgpt, crear propio!)</span>
+## 🛠 Metodología de trabajo
+ 
+### **1. Organización inicial y roles**
 
-En el desarrollo de la aplicación Martian Bank, hemos adoptado una metodología ágil que nos permite iterar rápidamente y adaptarnos a los cambios. A continuación, se describen algunos aspectos clave de nuestra metodología de trabajo:
 
-1. **Planificación Colaborativa**: 
-   - Antes de comenzar el desarrollo, realizamos sesiones de planificación donde todos los miembros del equipo contribuyen con ideas y sugerencias. Esto asegura que todos estén alineados con los objetivos del proyecto.
+- **Herramientas y repositorio:**  
+  - Uso de GitHub como repositorio principal.
+  - Docker Hub para crear contenedores de la aplicación.
+  - Cluster Kubernetes (Minikube, EKS).
+  - ArgoCD para despliegues GitOps.
 
-2. **Desarrollo Iterativo**:
-   - Dividimos el trabajo en pequeñas iteraciones o sprints, lo que nos permite enfocarnos en funcionalidades específicas y realizar entregas frecuentes.
 
-3. **Integración Continua (CI)**:
-   - Implementamos herramientas como GitGuardian para asegurar la seguridad del código y realizar análisis de código estático con SonarCloud. También utilizamos linting y pruebas unitarias para mantener la calidad del código.
+- **Roles del equipo (4 personas):**
 
-4. **Despliegue Continuo (CD)**:
-   - Utilizamos Argo CD para gestionar el despliegue automático de nuestras aplicaciones en el clúster de Kubernetes, lo que nos permite realizar actualizaciones rápidas y seguras.
+   - Cada integrante trabaja de manera independiente en una **feature branch**, pero sigue las mismas responsabilidades en el flujo de desarrollo y despliegue.  
+   - Responsabilidades individuales:  
+     - Desarrollo de la funcionalidad asignada.  
+     - Gestión de manifiestos Kubernetes específicos para su funcionalidad.  
+  
 
-5. **Revisiones de Código**:
-   - Cada cambio propuesto es revisado por al menos otro miembro del equipo antes de ser fusionado en la rama principal. Esto ayuda a detectar errores y mejorar la calidad del código.
+### **2. Flujo de trabajo.**
 
-6. **Documentación**:
-   - Mantenemos una documentación clara y accesible para todos los miembros del equipo, lo que facilita la incorporación de nuevos desarrolladores y asegura que todos comprendan la arquitectura y las decisiones tomadas.
+#### **Definición de features minimas/extras y sprints semanales:**
 
-### Ejemplo de Trabajo
+- Creación de repositorio y planificación de herramientas a utilizar.
+- Establecimiento de features minimas/extras a implementar
+- Reparto de features y organización de backlog de desarrollo de las mismas.
+- Establecimiento de hitos semanales.
+- Reuniones en google meet Lunes y Viernes 19h
+- Canal de comunicación continuo mediante grupo privado en Discord.
+- Documentación de consulta compartida mediante google drive.
 
-Durante el desarrollo del microservicio `accounts`, seguimos estos pasos:
+#### Planning semanal
 
-- **Definición de Requisitos**: Se definieron claramente los requisitos funcionales y no funcionales.
-- **Diseño**: Se elaboró un diagrama de arquitectura para visualizar cómo se integraría `accounts` con otros microservicios.
-- **Implementación**: El desarrollo se realizó en ramas separadas, permitiendo a cada desarrollador trabajar en su propia funcionalidad sin interferir con otros.
-- **Pruebas**: Se implementaron pruebas unitarias y se realizaron pruebas manuales para asegurar que el servicio funcionara como se esperaba.
-- **Despliegue**: Una vez completadas las pruebas, se realizó un despliegue a través de Argo CD, permitiendo una integración fluida en el entorno de producción.
+| Semana | Actividades principales | Resultados esperados |
+|--------|--------------------------|----------------------|
+| 1      | Configuración inicial; División de features; Chart Helm inicial | Repositorios  funcionales; features asignadas |
+| 2      | Desarrollo independiente de features | Cada feature desplegada en el entorno de pruebas |
+| 3      | Integración de features en `develop` | Aplicación completa funcionando en Local y EKS |
+| 4      | Resolución de errores; Pruebas finales; Documentación | Aplicación desplegada y operativa en ambos entornos |
 
-Este enfoque nos ha permitido mantener un alto nivel de calidad en nuestro código mientras respondemos rápidamente a los cambios en los requisitos o en el entorno.
 
-## Conlusiones
-<span style="color:red">(Crear Conlusiones)</span>
+### **Git Flow como estrategia de ramificación:**
+
+[Guía de Gitflow](gitflow-readme.md)
+
+Acuerdo de trabajo en grupo mediante Git Flow.
+   - **Main branch:** Contendrá el código siempre estable (producción).  
+   - **Develop branch:** Para la integración continua del código.  
+   - **Feature branches:** Una rama por funcionalidad (naming: `feature/nombre_funcionalidad`).  
+ 
+### **GitOps con ArgoCD para despliegues**
+
+[Mas información GitOps](gitops-readme.md)
+
+Implantación de metodología GitOps que utiliza Git como fuente unica de verdad. 
+
+- Preparación del repositorio Git para GitOps:
+
+    - Crear un repositorio de infraestructura separado para manifestos Kubernetes:
+
+- Automatización de despliegues con ArgoCD:
+
+    - Configuración de ArgoCD para sincronizar el repositorio de infraestructura con el cluster de Kubernetes:
+
+    - Activa sincronización automática (auto-sync) para despliegues.
+
+- Despliegue continuo (CD):
+
+    - Actualización del repositorio Git = despliegue automático por ArgoCD.
+    - Gestionar configuraciones sensibles con herramientas como Sealed Secrets.
+   
+ 
+
+### **3. Pruebas y validaciones**
+
+- **Pruebas locales:**
+
+   - Validación con `kubectl` y herramientas como `dashboard` para revisar recursos en el cluster.
+
+- **Pruebas en CI:**  
+   - Ejecutar pruebas e2e con herramientas como GitHub Actions.
+
+- **Monitoreo en Kubernetes:**  
+   - Configuración de **Prometheus** y **Grafana** para monitoreo de métricas.
+
+## 📚 Fuentes
+
+- [Documentación de Minikube para clusters multi-nodo](https://minikube.sigs.k8s.io/docs/tutorials/multi_node/)
+- [Tutorial para crear un cluster Kubernetes de 3 nodos con Minikube](https://medium.com/womenintechnology/create-a-3-node-kubernetes-cluster-with-minikube-8e3dc57d6df2)
+- [Documentación oficial del Dashboard de Kubernetes](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/)
+- [Helm Documentation: Creating Your First Helm Chart](https://helm.sh/docs/chart_template_guide/getting_started/)
+- [ArgoCD Tutorial: Continuous Delivery for Kubernetes](https://argoproj.github.io/argo-cd/getting_started/)
+- [Sealed Secrets for Kubernetes](https://github.com/bitnami-labs/sealed-secrets)
+- [Prometheus Monitoring for Kubernetes Applications](https://prometheus.io/docs/prometheus/latest/configuration/configuration/)
+- [Video: CI/CD with Helm and ArgoCD](https://www.youtube.com/watch?v=HX24uMKmJRw)
+- [Tutorial: Implementing GitOps with ArgoCD and Helm](https://www.arthurkoziel.com/setting-up-argocd-with-helm/)
+- [Kubernetes Monitoring with Prometheus and Grafana](https://sysdig.com/blog/kubernetes-monitoring-prometheus/)
+- [Video: Sealed Secrets in Kubernetes - Hands-on Demo](https://www.youtube.com/watch?v=xd2QoV6GJlc)

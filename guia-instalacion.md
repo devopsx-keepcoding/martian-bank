@@ -62,8 +62,30 @@ Asignamos etiquetas key:value a los nodos worker para facilitar la selección en
 kubectl label nodes martian-bank-test-3nodes-m02 role=worker
 kubectl label nodes martian-bank-test-3nodes-m03 role=worker
 ```
+### 6. Instalar el controlador de Kubeseal
 
-### 6. Instalar el chart de Helm de la aplicación
+- Ver Guia de instalacion de Sealed Secrets Controller: [Sealed Secrets en Kubernetes](sealed-secret-readme.md)
+
+### 7. Deployment de Prometheus
+
+```bash
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add stable https://charts.helm.sh/stable
+helm repo update
+
+```
+
+```bash
+helm -n monitoring upgrade \
+    --install prometheus \
+    prometheus-community/kube-prometheus-stack \
+    -f prometheus/values.yaml \
+    --create-namespace \
+    --wait --version 55.4.0
+
+```
+
+### 8. Instalar el chart de Helm de la aplicación
 
 Instalamos la aplicación usando Helm:
 
@@ -73,7 +95,13 @@ helm install martianbanktest martianbank-helm-chart
 
 El chart de Helm está configurado para desplegar 1 pod por cada servicio solo en los nodos worker, con un escalado de 1 a 5 réplicas.
 
-### 7. Acceder a la aplicación
+### 9. Deployment de MongoDB Exporter
+
+```bash
+helm install mongodb-exporter prometheus-community/prometheus-mongodb-exporter -f prometheus/values.yaml
+```
+
+### 10. Acceder a la aplicación
 
 Para acceder a la aplicación, ejecuta:
 
@@ -83,48 +111,8 @@ minikube -p martian-bank-test-3nodes tunnel
 
 Este comando crea un túnel para acceder a los servicios del cluster desde tu máquina local.
 
-## Instalación en AWS (Ejemplo CAMBIAR POR REAL) 
+## Instalación en AWS 
 
-**Nota**: Esta sección es un ejemplo y deberá ser actualizada con los pasos reales en el futuro.
-
-### 1. Configurar el Cluster EKS
-
-Crea un cluster EKS en AWS usando la consola de AWS o la CLI:
-
-```bash
-eksctl create cluster --name martian-bank-cluster --region us-west-2 --nodegroup-name standard-workers --node-type t3.medium --nodes 3 --nodes-min 1 --nodes-max 4 --managed
-```
+- Ver Guia de instalacion en aws: [Cluster EKS en AWS con Terraform](terraform-readme.md)
 
 
-### 2. Configurar kubectl
-
-Configura kubectl para conectarse a tu cluster EKS:
-
-```bash
-aws eks --region us-west-2 update-kubeconfig --name martian-bank-cluster
-```
-
-### 3. Desplegar la aplicación
-
-Usa Helm para desplegar la aplicación en el cluster EKS:
-
-```bash
-helm install martianbanktest martianbank-helm-chart
-```
-
-### 4. Configurar el balanceador de carga
-
-AWS EKS creará automáticamente un balanceador de carga. Obtén la URL del balanceador:
-
-```bash
-kubectl get services
-```
-
-
-Usa la URL externa proporcionada para acceder a la aplicación.
-
-## Recursos Adicionales
-
-- [Documentación de Minikube para clusters multi-nodo](https://minikube.sigs.k8s.io/docs/tutorials/multi_node/)
-- [Tutorial para crear un cluster Kubernetes de 3 nodos con Minikube](https://medium.com/womenintechnology/create-a-3-node-kubernetes-cluster-with-minikube-8e3dc57d6df2)
-- [Documentación oficial del Dashboard de Kubernetes](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/)
